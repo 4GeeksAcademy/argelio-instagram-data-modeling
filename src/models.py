@@ -7,23 +7,6 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'User'
-    id = Column(Integer, primary_key = True)
-    name = Column(String(150), nullable = False)
-    email = Column(String(150), nullable = False)
-    password = Column(String(150), nullable = False)
-
-class Profile(Base):
-    __tablename__ = 'Profile'
-    id = Column(Integer, primary_key = True)
-    profile_pic = Column(String(150))
-    bio = Column(String(150))
-    followers = Column(String(150))
-    following = Column(String(150))
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
-
 class Stories(Base):
     __tablename__ = 'Stories'
     id = Column(Integer, primary_key = True)
@@ -31,7 +14,6 @@ class Stories(Base):
     views = Column(String(150))
     likes = Column(String(150))
     profile_id = Column(Integer, ForeignKey('profile.id'))
-    profile = relationship(Profile)
 
 class Post(Base):
     __tablename__ = 'Post'
@@ -41,10 +23,29 @@ class Post(Base):
     likes = Column(Integer)
     comments = Column(String(500))
     profile_id = Column(Integer, ForeignKey('profile.id'))
-    profile = relationship(Profile)
+
+class Profile(Base):
+    __tablename__ = 'Profile'
+    id = Column(Integer, primary_key = True)
+    profile_pic = Column(String(150))
+    bio = Column(String(150))
+    followers = Column(String(150))
+    following = Column(String(150))
+    user_id = Column(Integer, ForeignKey('user.id'))
+    stories = relationship(Stories)
+    post = relationship(Post)
+
+class User(Base):
+    __tablename__ = 'User'
+    id = Column(Integer, primary_key = True)
+    name = Column(String(150), nullable = False)
+    email = Column(String(150), nullable = False)
+    password = Column(String(150), nullable = False)
+    profile = relationship(Profile)    
     
-    def to_dict(self):
-        return {}
+    
+def to_dict(self):
+    return {}
 
 ## Draw from SQLAlchemy base
 try:
